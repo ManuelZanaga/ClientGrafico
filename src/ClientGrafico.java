@@ -1,4 +1,5 @@
 import java.awt.Component;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,6 +42,7 @@ public class ClientGrafico extends javax.swing.JFrame {
         jTextPane1 = new javax.swing.JTextPane();
         jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,6 +56,12 @@ public class ClientGrafico extends javax.swing.JFrame {
         jTextPane1.setEditable(false);
         jScrollPane1.setViewportView(jTextPane1);
 
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+        });
+
         jButton2.setText("Cancella");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -61,32 +69,37 @@ public class ClientGrafico extends javax.swing.JFrame {
             }
         });
 
+        jCheckBox1.setText("Maiuscole");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jCheckBox1))
                 .addContainerGap())
         );
 
@@ -99,8 +112,9 @@ public class ClientGrafico extends javax.swing.JFrame {
         try{
             BufferedReader sock_in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             PrintWriter sock_out = new PrintWriter(new OutputStreamWriter(s.getOutputStream()), true);
-            sock_out.println(echo);
-            if(!echo.equals("maiuscole on") && !echo.equals("maiuscole off")){
+            if(!jCheckBox1.isSelected()){
+                sock_out.println("maiuscole off");
+                sock_out.println(echo);
                 if(i==0){
                     String testo = jTextPane1.getText()+echo;
                     jTextPane1.setText(testo);
@@ -108,7 +122,6 @@ public class ClientGrafico extends javax.swing.JFrame {
                     String testo = jTextPane1.getText()+"\n"+echo;
                     jTextPane1.setText(testo);
                 }
-            
             risp=sock_in.readLine();
             if(risp.equals("fine")){
                 System.exit(0);
@@ -116,13 +129,17 @@ public class ClientGrafico extends javax.swing.JFrame {
             String testo = jTextPane1.getText()+"\n"+risp;
             jTextPane1.setText(testo);
             }else{
-                String testo = sock_in.readLine();
+                sock_out.println("maiuscole on");
+                sock_out.println(echo);
                 if(i==0){
-                    jTextPane1.setText(testo);  
+                    String testo = jTextPane1.getText()+echo;
+                    jTextPane1.setText(testo);
                 }else{
-                    jTextPane1.setText(jTextPane1.getText()+"\n"+testo);
+                    String testo = jTextPane1.getText()+"\n"+echo;
+                    jTextPane1.setText(testo);
                 }
-                
+                String testo = sock_in.readLine();
+                jTextPane1.setText(jTextPane1.getText()+"\n"+testo);
             }i++;      
             }catch(IOException e){                
         }         // TODO add your handling code here:
@@ -132,6 +149,47 @@ public class ClientGrafico extends javax.swing.JFrame {
         jTextPane1.setText("");
         i=0;
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            String echo=jTextField1.getText();
+        jTextField1.setText("");
+        try{
+            BufferedReader sock_in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            PrintWriter sock_out = new PrintWriter(new OutputStreamWriter(s.getOutputStream()), true);
+            if(!jCheckBox1.isSelected()){
+                sock_out.println("maiuscole off");
+                sock_out.println(echo);
+                if(i==0){
+                    String testo = jTextPane1.getText()+echo;
+                    jTextPane1.setText(testo);
+                }else{
+                    String testo = jTextPane1.getText()+"\n"+echo;
+                    jTextPane1.setText(testo);
+                }
+            risp=sock_in.readLine();
+            if(risp.equals("fine")){
+                System.exit(0);
+            }  
+            String testo = jTextPane1.getText()+"\n"+risp;
+            jTextPane1.setText(testo);
+            }else{
+                sock_out.println("maiuscole on");
+                sock_out.println(echo);
+                if(i==0){
+                    String testo = jTextPane1.getText()+echo;
+                    jTextPane1.setText(testo);
+                }else{
+                    String testo = jTextPane1.getText()+"\n"+echo;
+                    jTextPane1.setText(testo);
+                }
+                String testo = sock_in.readLine();
+                jTextPane1.setText(jTextPane1.getText()+"\n"+testo);
+            }i++;      
+            }catch(IOException e){                
+        } 
+        }
+    }//GEN-LAST:event_jTextField1KeyPressed
 
     /**
      * @param args the command line arguments
@@ -177,6 +235,7 @@ public class ClientGrafico extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextPane jTextPane1;
