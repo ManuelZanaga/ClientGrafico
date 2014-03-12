@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;/*
  *
  * @author Manuel
  */
-public class ClientGrafico extends javax.swing.JFrame {
+public class ClientGrafico extends javax.swing.JFrame {    
     Socket s;
     int i=0;
     private String risp;
@@ -45,6 +45,7 @@ public class ClientGrafico extends javax.swing.JFrame {
         jCheckBox1 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Client");
 
         jButton1.setText("Invia");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
